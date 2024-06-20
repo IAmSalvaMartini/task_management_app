@@ -1,7 +1,7 @@
 const app = require('./app');
 const mongoose = require('mongoose');
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 3001;
 const MONGODB_URI = 'mongodb://localhost:27017/task-management-app';
 
 mongoose.connect(MONGODB_URI, {
