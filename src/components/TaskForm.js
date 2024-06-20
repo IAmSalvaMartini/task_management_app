@@ -8,7 +8,7 @@ function TaskForm({ task, onTaskSubmit, onTaskCancel }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     const newTask = {
-      id: task ? task.id : null,
+      id: task ? task._id : null,
       title,
       description,
       dueDate,
@@ -22,6 +22,12 @@ function TaskForm({ task, onTaskSubmit, onTaskCancel }) {
     setDescription('');
     setDueDate('');
   };
+
+  const handleTaskCancel = () => {
+    onTaskCancel();
+    window.location.reload();
+  };
+  
 
   return (
     <form onSubmit={handleSubmit}>
@@ -63,7 +69,7 @@ function TaskForm({ task, onTaskSubmit, onTaskCancel }) {
       <button
         type="button"
         className="btn btn-secondary"
-        onClick={onTaskCancel}
+        onClick={handleTaskCancel}
       >
         Cancel
       </button>

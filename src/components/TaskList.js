@@ -1,6 +1,9 @@
 import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 
-function TaskList({ tasks, onTaskSelect, onTaskEdit, onTaskCreate }) {
+function TaskList({ tasks, onTaskSelect, onTaskEdit, onTaskCreate, onTaskDelete }) {
+  console.log('Tasks:', tasks);
   return (
     <div>
       <h3>Task List</h3>
@@ -10,7 +13,7 @@ function TaskList({ tasks, onTaskSelect, onTaskEdit, onTaskCreate }) {
       <ul className="list-group">
         {tasks.map((task) => (
           <li
-            key={task.id}
+            key={task._id}
             className="list-group-item d-flex justify-content-between align-items-center"
           >
             <span>{task.title}</span>
@@ -27,6 +30,10 @@ function TaskList({ tasks, onTaskSelect, onTaskEdit, onTaskCreate }) {
               >
                 Edit
               </button>
+              <button className="btn btn-sm btn-danger" onClick={() => task && task._id && onTaskDelete(task)}>
+                <FontAwesomeIcon icon={faTrash} />
+              </button>
+
             </div>
           </li>
         ))}

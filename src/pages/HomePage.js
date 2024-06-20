@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import TaskList from '../components/TaskList';
 import TaskDetails from '../components/TaskDetails';
 import TaskForm from '../components/TaskForm';
@@ -16,12 +17,18 @@ function HomePage() {
   const fetchTasks = async () => {
     try {
       const response = await TaskService.getTasks();
-      console.log('API response:', response.data); // Add this line
-      setTasks(response.data);
+      if (response === undefined) {
+        throw new Error('API response is undefined');
+      }
+      if (!Array.isArray(response)) {
+        throw new Error('API response is not an array of tasks');
+      }
+      setTasks(response);
     } catch (error) {
       console.error('Error fetching tasks:', error);
     }
-  };
+  };  
+  
 
   const handleTaskUpdate = async (updatedTask) => {
     try {
@@ -45,15 +52,32 @@ function HomePage() {
     setIsEditing(false);
   };
 
+  const handleTaskCreate = () => {
+    const newTask = {
+      id: uuidv4(),
+      title: '',
+      description: '',
+      dueDate: '',
+    };
+    setTasks([...tasks, newTask]);
+    setSelectedTask(newTask);
+    setIsEditing(true);
+  };
+
   const handleTaskEdit = (task) => {
     setSelectedTask(task);
     setIsEditing(true);
   };
-
-  const handleTaskCreate = () => {
-    setSelectedTask(null);
-    setIsEditing(true);
-  };
+  
+  const handleTaskDelete = async (task) => {
+    try {
+      await TaskService.deleteTask(task);
+      setTasks(tasks.filter((t) => t._id !== task._id));
+      setSelectedTask(null);
+    } catch (error) {
+      console.error('Error deleting task:', error);
+    }
+  };    
 
   // ... (other functions for handling task updates and deletions)
 
@@ -66,6 +90,7 @@ function HomePage() {
             onTaskSelect={handleTaskSelect}
             onTaskEdit={handleTaskEdit}
             onTaskCreate={handleTaskCreate}
+            onTaskDelete={handleTaskDelete}
           />
         </div>
         <div className="col-md-8">
